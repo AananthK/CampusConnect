@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusConnect – Calendar</title>
+
+  <link rel="stylesheet" href="styles.css" />
+
+  <!-- Supabase (same as index.html) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- Your calendar logic -->
+  <script src="calendar.js" defer></script>
+</head>
+
+<body>
+
+  <!-- Reuse the site's header -->
+  <header>
+    <h1>CampusConnect</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Discover Events</a></li>
+        <li><a href="index.html">My Events</a></li>
+        <li><a href="index.html">Manage Events</a></li>
+        <li><a href="index.html">Analytics</a></li>
+        <li><a href="calendar.html" style="font-weight:700; text-decoration:underline;">Calendar</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Event Calendar</h2>
+
+      <!-- Calendar Controls -->
+      <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+        <button id="prevMonthBtn" style="padding:0.5rem 1rem; border-radius:6px; background:#2d5be3; color:#fff; border:none; cursor:pointer;">← Previous</button>
+        <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
+        <button id="nextMonthBtn" style="padding:0.5rem 1rem; border-radius:6px; background:#2d5be3; color:#fff; border:none; cursor:pointer;">Next →</button>
+      </div>
+
+      <!-- Calendar Grid -->
+      <div id="calendarGrid" 
+           style="display:grid;
+                  grid-template-columns: repeat(7, 1fr);
+                  gap: 0.5rem;">
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 CampusConnect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
