@@ -6,17 +6,11 @@
   <title>CampusConnect – Calendar</title>
 
   <link rel="stylesheet" href="styles.css" />
-
-  <!-- Supabase (same as index.html) -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <!-- Your calendar logic -->
   <script src="calendar.js" defer></script>
 </head>
 
 <body>
 
-  <!-- Reuse the site's header -->
   <header>
     <h1>CampusConnect</h1>
     <nav>
@@ -34,18 +28,46 @@
     <section>
       <h2>Event Calendar</h2>
 
-      <!-- Calendar Controls -->
-      <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
-        <button id="prevMonthBtn" style="padding:0.5rem 1rem; border-radius:6px; background:#2d5be3; color:#fff; border:none; cursor:pointer;">← Previous</button>
-        <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
-        <button id="nextMonthBtn" style="padding:0.5rem 1rem; border-radius:6px; background:#2d5be3; color:#fff; border:none; cursor:pointer;">Next →</button>
+      <!-- TABS -->
+      <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+        <button class="calTabBtn" onclick="showView('dailyView')">Daily</button>
+        <button class="calTabBtn" onclick="showView('weeklyView')">Weekly</button>
+        <button class="calTabBtn" onclick="showView('monthlyView')">Monthly</button>
       </div>
 
-      <!-- Calendar Grid -->
-      <div id="calendarGrid" 
-           style="display:grid;
-                  grid-template-columns: repeat(7, 1fr);
-                  gap: 0.5rem;">
+      <!-- DAILY VIEW -->
+      <div id="dailyView" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-1)">← Previous</button>
+          <h3 id="dailyLabel" style="color:#2d5be3;"></h3>
+          <button class="navBtn" onclick="changeDay(1)">Next →</button>
+        </div>
+        <div id="dailyEvents" style="padding:1rem; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
+          No events for this day.
+        </div>
+      </div>
+
+      <!-- WEEKLY VIEW -->
+      <div id="weeklyView" style="display:none;">
+        <h3 id="weeklyLabel" style="color:#2d5be3; text-align:center; margin-bottom:1rem;"></h3>
+        <div id="weeklyGrid" 
+             style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.5rem;">
+        </div>
+      </div>
+
+      <!-- MONTHLY VIEW -->
+      <div id="monthlyView" style="display:block;">
+        <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+          <button class="navBtn" id="prevMonthBtn">← Previous</button>
+          <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
+          <button class="navBtn" id="nextMonthBtn">Next →</button>
+        </div>
+
+        <div id="calendarGrid" 
+             style="display:grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 0.8rem;">
+        </div>
       </div>
 
     </section>
