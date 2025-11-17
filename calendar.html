@@ -42,27 +42,40 @@
           <h3 id="dailyLabel" style="color:#2d5be3;"></h3>
           <button class="navBtn" onclick="changeDay(1)">Next →</button>
         </div>
-        <div id="dailyEvents" style="padding:1rem; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
+        <div id="dailyEvents" style="min-height:400px; min-width:739px; padding:1rem; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
           No events for this day.
         </div>
       </div>
 
       <!-- WEEKLY VIEW -->
       <div id="weeklyView" style="display:none;">
-        <h3 id="weeklyLabel" style="color:#2d5be3; text-align:center; margin-bottom:1rem;"></h3>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-7)">← Previous</button>
+          <h3 id="weeklyLabel" style="color:#2d5be3; text-align:center; margin-bottom:1rem;"></h3>
+          <button class="navBtn" onclick="changeDay(7)">Next →</button>
+        </div>
         <div id="weeklyGrid" 
              style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.5rem;">
         </div>
       </div>
 
       <!-- MONTHLY VIEW -->
-      <div id="monthlyView" style="display:block;">
+      <div id="monthlyView" style="display:block; min-height:667px; min-width:740px">
         <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
           <button class="navBtn" id="prevMonthBtn">← Previous</button>
           <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
           <button class="navBtn" id="nextMonthBtn">Next →</button>
         </div>
 
+        <div id="calendarWeekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
         <div id="calendarGrid" 
              style="display:grid;
                     grid-template-columns: repeat(7, 1fr);
