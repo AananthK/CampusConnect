@@ -65,6 +65,8 @@ function renderMonthlyCalendar() { // update monthly calendar
     // Real days
     for (let day = 1; day <= daysInMonth; day++) {
         let cell = document.createElement("div");
+        
+        cell.style.position = "relative";
         cell.textContent = day;
 
         // Sizing for events
@@ -85,6 +87,17 @@ function renderMonthlyCalendar() { // update monthly calendar
         ) {
             cell.classList.add("today"); // apply styles to current date cell
         }
+
+        (async () => {
+            const eventCount = await getEventCountForDate(year, month, day);
+
+            if (eventCount > 0) {
+                const bubble = document.createElement("div");
+                bubble.classList.add("event-indicator");
+                bubble.textContent = eventCount;
+                cell.appendChild(bubble);
+            }
+        })();
 
         // Hover
         cell.addEventListener("mouseover", () => {
@@ -130,11 +143,17 @@ function renderWeeklyCalendar() {
 
         let cell = document.createElement("div");
 
+        cell.style.position = "relative";
         cell.style.background = "#fff";
         cell.style.border = "1px solid #d1d5db";
         cell.style.borderRadius = "10px";
         cell.style.padding = "1rem";
         cell.style.minHeight = "100px";
+
+        cell.innerHTML = `
+            <strong>${day.toLocaleString("en-US",{ weekday: "short" })}</strong><br>
+            ${day.getMonth()+1}/${day.getDate()}
+        `;
 
         if (
             day.getDate() === today.getDate() &&
@@ -142,18 +161,23 @@ function renderWeeklyCalendar() {
             day.getFullYear() === today.getFullYear()
         ){
             cell.classList.add("today");
-            cell.innerHTML = `
-            <strong>${day.toLocaleString("en-US",{ weekday: "short" })}</strong><br>
-            ${day.getMonth()+1}/${day.getDate()}
-            <div style="margin-top:0.5rem; font-size:0.9rem; color:#fff;">No events</div>
-        `;
-        } else{
-            cell.innerHTML = `
-            <strong>${day.toLocaleString("en-US",{ weekday: "short" })}</strong><br>
-            ${day.getMonth()+1}/${day.getDate()}
-            <div style="margin-top:0.5rem; font-size:0.9rem; color:#444;">No events</div>
-        `;
         }
+
+        (async () => {
+            const eventCount = await getEventCountForDate(
+                day.getFullYear(),
+                day.getMonth(),
+                day.getDate()
+            );
+
+            if (eventCount > 0) {
+                const bubble = document.createElement("div");
+                bubble.classList.add("event-indicator");
+                bubble.textContent = eventCount;
+
+                cell.appendChild(bubble);
+            }
+        })();
 
         // Hover
         cell.addEventListener("mouseover", () => { cell.style.background = "#e7edff"; });
@@ -182,13 +206,16 @@ function renderWeeklyCalendar() {
 // --------------------
 //  DAILY VIEW
 // --------------------
-function renderDailyCalendar() {
+async function renderDailyCalendar() {
+    // 1. Update the header label
     const label = document.getElementById("dailyLabel");
     label.textContent = currentDate.toDateString();
 
-    document.getElementById("dailyEvents").innerHTML = "No events for this day.";
+    // 2. Fetch events for the selected date
+    const events = await getEventsForDay(currentDate);
 
-    
+    // 3. Render them visually
+    renderDailyEvents(events);
 }
 
 function changeDay(offset) {
@@ -196,4 +223,8 @@ function changeDay(offset) {
     renderDailyCalendar();
     renderWeeklyCalendar();
     renderMonthlyCalendar();
+    
 }
+
+window.showView = showView;
+window.changeDay = changeDay;
