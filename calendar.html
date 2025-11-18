@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusConnect – Calendar</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <script src="calendar.js" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>CampusConnect</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">Discover Events</a></li>
+        <li><a href="index.html">My Events</a></li>
+        <li><a href="index.html">Manage Events</a></li>
+        <li><a href="index.html">Analytics</a></li>
+        <li><a href="calendar.html" style="font-weight:700; text-decoration:underline;">Calendar</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Event Calendar</h2>
+
+      <!-- TABS -->
+      <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+        <button class="calTabBtn" onclick="showView('dailyView')">Daily</button>
+        <button class="calTabBtn" onclick="showView('weeklyView')">Weekly</button>
+        <button class="calTabBtn" onclick="showView('monthlyView')">Monthly</button>
+      </div>
+
+      <!-- DAILY VIEW -->
+      <div id="dailyView" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-1)">← Previous</button>
+          <h3 id="dailyLabel" style="color:#2d5be3;"></h3>
+          <button class="navBtn" onclick="changeDay(1)">Next →</button>
+        </div>
+        <div id="dailyEvents" style="min-height:400px; min-width:739px; padding:1rem; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
+          No events for this day.
+        </div>
+      </div>
+
+      <!-- WEEKLY VIEW -->
+      <div id="weeklyView" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-7)">← Previous</button>
+          <h3 id="weeklyLabel" style="color:#2d5be3; text-align:center; margin-bottom:1rem;"></h3>
+          <button class="navBtn" onclick="changeDay(7)">Next →</button>
+        </div>
+        <div id="weeklyGrid" 
+             style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.5rem;">
+        </div>
+      </div>
+
+      <!-- MONTHLY VIEW -->
+      <div id="monthlyView" style="display:block; min-height:667px; min-width:740px">
+        <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+          <button class="navBtn" id="prevMonthBtn">← Previous</button>
+          <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
+          <button class="navBtn" id="nextMonthBtn">Next →</button>
+        </div>
+
+        <div id="calendarWeekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+        <div id="calendarGrid" 
+             style="display:grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 0.8rem;">
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 CampusConnect. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
