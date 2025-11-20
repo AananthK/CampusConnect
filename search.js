@@ -36,14 +36,19 @@ function renderBrowserEvents(eventList) {
 // Filter + search combined
 function applySearch() {
     const query = searchBox.value.toLowerCase();
+    const selectedCategory = categoryFilter.value; // "" or "Academic"/"Social"/"Sports"
 
     const filtered = allMockEvents.filter(ev => {
-        return (
+        const matchesText =
             ev.title.toLowerCase().includes(query) ||
             ev.description.toLowerCase().includes(query) ||
             ev.organizer.toLowerCase().includes(query) ||
-            ev.category.toLowerCase().includes(query)
-        );
+            ev.category.toLowerCase().includes(query);
+
+        const matchesCategory =
+            selectedCategory === "" || ev.category === selectedCategory;
+
+        return matchesText && matchesCategory;
     });
 
     renderBrowserEvents(filtered);
@@ -56,5 +61,9 @@ let allMockEvents = [];
     allMockEvents = await loadMockEvents();
     renderBrowserEvents(allMockEvents);
 
+    // When user types in the search box
     searchBox.addEventListener("input", applySearch);
+
+    // When user changes the category dropdown
+    categoryFilter.addEventListener("change", applySearch);
 })();
