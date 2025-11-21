@@ -106,6 +106,56 @@ button[type="submit"]:hover {
     background: #1741a6;
 }
 
+/* Current date cell for calendar */
+.today {
+    background: #2d5be3 !important;
+    color: #fff !important;
+    font-weight: bold;
+    outline: 3px solid #ffffffaa;
+}
+
+#calendarWeekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #4b5563; /* Tailwind gray-700 */
+    text-align: center;
+}
+
+#calendarWeekdays div {
+    padding: 0.3rem 0;
+}
+
+/* Calendar Buttons (matching theme) */
+.calTabBtn, .navBtn {
+    background: #2d5be3;
+    color: #fff;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    transition: background 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.calTabBtn:hover, .navBtn:hover {
+    background: #1741a6;
+    transform: scale(1.03);
+}
+
+.calTabBtn:active, .navBtn:active {
+    transform: scale(0.98);
+    background: #13378c;
+}
+
+.calTabBtn {
+    margin-right: 0.4rem;
+}
+
+
 #eventsList,
 #myEventsList,
 #managedEventsList,
@@ -187,8 +237,108 @@ footer {
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
+/* start of console.html style */
+.console-container {
+  max-width: 1100px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
 
-/* Responsive Design */
+.controls {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+table.users {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+}
+
+table.users th,
+table.users td {
+  padding: 0.75rem 0.9rem;
+  border-bottom: 1px solid #eef2f7;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+table.users th {
+  background: #f4f7ff;
+  color: #2d5be3;
+  font-weight: 600;
+}
+
+.small-muted {
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.status {
+  font-size: 0.9rem;
+}
+
+.btn {
+  background: #2d5be3;
+  color: #fff;
+  padding: 0.5rem 0.8rem;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn.secondary {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* DROP-DOWN Menu Feature for Menu Options */
+.dropdown-parent {
+    position: relative;
+}
+
+ul.dropdown {
+    position: absolute;
+    top: 100%;            /* directly below parent */
+    left: 0;
+    background: #13378c;
+    display: none;
+    padding: 0;
+    margin: 0;
+    width: 180px;         /* or auto */
+    border-radius: 0 0 6px 6px;
+
+    padding-top: 16px;
+}
+
+/* dropdown list items */
+ul.dropdown li {
+    display: block;
+}
+
+/* show dropdown when hovering parent li */
+.dropdown-parent:hover > ul.dropdown {
+    display: block;
+}
+
+/* links inside dropdown */
+ul.dropdown li a {
+    color: white;
+    padding: 10px;
+    display: block;
+}
+
+/* hover effect */
+ul.dropdown li a:hover {
+    background: #245ee6;
+}
+
 @media (max-width: 700px) {
     main {
         padding: 0 0.5rem;

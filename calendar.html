@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CampusConnect – Calendar</title>
+
+  <!-- Supabase-->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    const SUPABASE_URL = "https://mtjgmoctyzgfubkpsydg.supabase.co";
+    const SUPABASE_ANON_KEY = "eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im10amdtb2N0eXpnZnVia3BzeWRnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTk2Mjc5MTksImV4cCI6MjA3NTIwMzkxOX0...";
+
+    window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  </script>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="daily_view.css" />
+  <script src="events.js" defer></script>
+  <script src="calendar.js" defer></script>
+</head>
+
+<body>
+
+  <header>
+    <h1>CampusConnect</h1>
+    <nav>
+      <ul>
+        <li class ="dropdown-parent">
+          <a href="index.html">Discover Events</a>
+          <ul class ="dropdown">
+            <li><a href ="calendar.html">Event Calendar</a></li>
+            <li><a href ="browser-layout.html">Event Search</a></li>
+          </ul>
+        </li>
+        <li><a href="index.html">My Events</a></li>
+        <li><a href="index.html">Manage Events</a></li>
+        <li><a href="index.html">Analytics</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Event Calendar</h2>
+
+      <!-- TABS -->
+      <div style="display:flex; gap:1rem; margin-bottom:1.5rem;">
+        <button class="calTabBtn" onclick="showView('dailyView')">Daily</button>
+        <button class="calTabBtn" onclick="showView('weeklyView')">Weekly</button>
+        <button class="calTabBtn" onclick="showView('monthlyView')">Monthly</button>
+      </div>
+
+      <!-- DAILY VIEW -->
+      <div id="dailyView" style="display:none; width:790px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-1)">← Previous</button>
+          <h3 id="dailyLabel" style="color:#2d5be3;"></h3>
+          <button class="navBtn" onclick="changeDay(1)">Next →</button>
+        </div>
+        <div id="dailyEvents" style="min-height:400px; min-width:739px; padding:1rem; border:1px solid #d1d5db; border-radius:10px; background:#fff;">
+          No events for this day.
+        </div>
+      </div>
+
+      <!-- WEEKLY VIEW -->
+      <div id="weeklyView" style="display:none; width:790px;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <button class="navBtn" onclick="changeDay(-7)">← Previous</button>
+          <h3 id="weeklyLabel" style="color:#2d5be3; text-align:center; margin-bottom:1rem;"></h3>
+          <button class="navBtn" onclick="changeDay(7)">Next →</button>
+        </div>
+        <div id="weeklyGrid" 
+             style="display:grid; grid-template-columns:repeat(7,1fr); gap:0.5rem;">
+        </div>
+      </div>
+
+      <!-- MONTHLY VIEW -->
+      <div id="monthlyView" style="display:block; height:702px; width:790px;">
+        <div id="calendarControls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 1.5rem;">
+          <button class="navBtn" id="prevMonthBtn">← Previous</button>
+          <h3 id="calendarMonth" style="font-size:1.4rem; color:#2d5be3;"></h3>
+          <button class="navBtn" id="nextMonthBtn">Next →</button>
+        </div>
+
+        <div id="calendarWeekdays">
+          <div>Sun</div>
+          <div>Mon</div>
+          <div>Tue</div>
+          <div>Wed</div>
+          <div>Thu</div>
+          <div>Fri</div>
+          <div>Sat</div>
+        </div>
+        <div id="calendarGrid" 
+             style="display:grid;
+                    grid-template-columns: repeat(7, 1fr);
+                    gap: 0.8rem;">
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 CampusConnect. All rights reserved.</p>
+  </footer>
+
+  <div id="eventModal" class="modal">
+    <div class="modal-content">
+      <span id="closeModal" class="close">&times;</span>
+      <h2 id="modalTitle"></h2>
+      <p id="modalOrganizer"></p>
+      <p id="modalTime"></p>
+      <p id="modalLocation"></p>
+      <p id="modalDescription"></p>
+      <button class="navBtn">Book</button>
+    </div>
+  </div>
+</body>
+</html>
