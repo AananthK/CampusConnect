@@ -1,165 +1,226 @@
-// GLOBAL DATE (current view)
+// ----------------------------------------------------
+// GLOBAL DATE (shared across all views + tests)
+// ----------------------------------------------------
 let currentDate = new Date();
 
-// ON PAGE LOAD
-document.addEventListener("DOMContentLoaded", () => {
-    setupButtons();
-    renderMonthlyCalendar();
-    renderWeeklyCalendar();
-    renderDailyCalendar();
-});
+// ----------------------------------------------------
+// EVENT STORAGE FOR UNIT TESTING
+// ----------------------------------------------------
+let eventsByDate = {};
 
-// --------------------
-//  TAB SWITCHING
-// --------------------
-function showView(view) {
-    document.getElementById("dailyView").style.display = "none";
-    document.getElementById("weeklyView").style.display = "none";
-    document.getElementById("monthlyView").style.display = "none";
-
-    document.getElementById(view).style.display = "block";
+function addEvent(dateString, eventName) {
+  if (!eventsByDate[dateString]) {
+    eventsByDate[dateString] = [];
+  }
+  eventsByDate[dateString].push(eventName);
 }
 
-// --------------------
-//  MONTHLY CALENDAR
-// --------------------
+function getEventsForDate(dateString) {
+  return eventsByDate[dateString] || [];
+}
+
+// ----------------------------------------------------
+// SELECTED DATE HELPERS FOR UNIT TESTING
+// ----------------------------------------------------
+function setSelectedDate(year, month, day) {
+  currentDate = new Date(year, month, day);
+}
+
+function getSelectedDate() {
+  return {
+    year: currentDate.getFullYear(),
+    month: currentDate.getMonth(),
+    day: currentDate.getDate()
+  };
+}
+
+// ----------------------------------------------------
+// ON PAGE LOAD (real calendar page only)
+// ----------------------------------------------------
+document.addEventListener("DOMContentLoaded", () => {
+  setupButtons();
+  renderMonthlyCalendar();
+  renderWeeklyCalendar();
+  renderDailyCalendar();
+});
+
+// ----------------------------------------------------
+// TAB SWITCHING
+// ----------------------------------------------------
+let currentView = "monthly";
+
+function showView(view) {
+  const daily = document.getElementById("dailyView");
+  const weekly = document.getElementById("weeklyView");
+  const monthly = document.getElementById("monthlyView");
+
+  if (!daily || !weekly || !monthly) return; // skip during tests
+
+  daily.style.display = "none";
+  weekly.style.display = "none";
+  monthly.style.display = "none";
+
+  document.getElementById(view).style.display = "block";
+  currentView = view;
+}
+
+function getCurrentView() {
+  return currentView;
+}
+
+// ----------------------------------------------------
+// MONTHLY VIEW
+// ----------------------------------------------------
 function setupButtons() {
-    document.getElementById("prevMonthBtn").addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() - 1);
-        renderMonthlyCalendar();
-    });
-    document.getElementById("nextMonthBtn").addEventListener("click", () => {
-        currentDate.setMonth(currentDate.getMonth() + 1);
-        renderMonthlyCalendar();
-    });
+  const prevBtn = document.getElementById("prevMonthBtn");
+  const nextBtn = document.getElementById("nextMonthBtn");
+
+  if (!prevBtn || !nextBtn) return; // skip in tests
+
+  prevBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderMonthlyCalendar();
+  });
+
+  nextBtn.addEventListener("click", () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderMonthlyCalendar();
+  });
 }
 
 function renderMonthlyCalendar() {
-    const monthLabel = document.getElementById("calendarMonth");
-    const grid = document.getElementById("calendarGrid");
+  const monthLabel = document.getElementById("calendarMonth");
+  const grid = document.getElementById("calendarGrid");
 
-    const year = currentDate.getFullYear();
-    const month = currentDate.getMonth();
+  if (!monthLabel || !grid) return; // skip in tests
 
-    const monthNames = [
-        "January","February","March","April","May","June",
-        "July","August","September","October","November","December"
-    ];
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth();
 
-    monthLabel.textContent = `${monthNames[month]} ${year}`;
-    grid.innerHTML = "";
+  const monthNames = [
+    "January","February","March","April","May","June",
+    "July","August","September","October","November","December"
+  ];
 
-    const firstDay = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month+1, 0).getDate();
-    const today = new Date();
+  monthLabel.textContent = `${monthNames[month]} ${year}`;
+  grid.innerHTML = "";
 
-    // Blank cells before 1st
-    for (let i = 0; i < firstDay; i++) {
-        let blank = document.createElement("div");
-        blank.style.minHeight = "90px";
-        grid.appendChild(blank);
+  const firstDay = new Date(year, month, 1).getDay();
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const today = new Date();
+
+  // Blank cells
+  for (let i = 0; i < firstDay; i++) {
+    let blank = document.createElement("div");
+    blank.style.minHeight = "90px";
+    grid.appendChild(blank);
+  }
+
+  // Real days
+  for (let day = 1; day <= daysInMonth; day++) {
+    let cell = document.createElement("div");
+    cell.textContent = day;
+
+    cell.style.minHeight = "90px";
+    cell.style.padding = "1rem";
+    cell.style.background = "#fff";
+    cell.style.border = "1px solid #d1d5db";
+    cell.style.borderRadius = "10px";
+    cell.style.textAlign = "center";
+    cell.style.fontSize = "1.1rem";
+    cell.style.cursor = "pointer";
+
+    // Today highlight
+    if (
+      day === today.getDate() &&
+      month === today.getMonth() &&
+      year === today.getFullYear()
+    ) {
+      cell.style.background = "#2d5be3";
+      cell.style.color = "#fff";
+      cell.style.fontWeight = "bold";
+      cell.style.outline = "3px solid #ffffffaa";
     }
 
-    // Real days
-    for (let day = 1; day <= daysInMonth; day++) {
-        let cell = document.createElement("div");
-        cell.textContent = day;
+    // Hover effect
+    cell.addEventListener("mouseover", () => {
+      cell.style.background = "#e7edff";
+    });
 
-        // Sizing for events
-        cell.style.minHeight = "90px";
-        cell.style.padding = "1rem";
+    cell.addEventListener("mouseout", () => {
+      if (cell.style.outline) {
+        cell.style.background = "#2d5be3";
+        cell.style.color = "#fff";
+      } else {
         cell.style.background = "#fff";
-        cell.style.border = "1px solid #d1d5db";
-        cell.style.borderRadius = "10px";
-        cell.style.textAlign = "center";
-        cell.style.fontSize = "1.1rem";
-        cell.style.cursor = "pointer";
+        cell.style.color = "#222";
+      }
+    });
 
-        // Today highlight fix
-        if (
-            day === today.getDate() &&
-            month === today.getMonth() &&
-            year === today.getFullYear()
-        ) {
-            cell.style.background = "#2d5be3";
-            cell.style.color = "#fff";
-            cell.style.fontWeight = "bold";
-            cell.style.outline = "3px solid #ffffff aa"; // white ring so number is visible
-        }
+    // Clicking switches to daily
+    cell.addEventListener("click", () => {
+      currentDate = new Date(year, month, day);
+      renderDailyCalendar();
+      renderWeeklyCalendar();
+      showView("dailyView");
+    });
 
-        // Hover
-        cell.addEventListener("mouseover", () => { cell.style.background = "#e7edff"; });
-        cell.addEventListener("mouseout", () => {
-            if (cell.style.outline) {
-                cell.style.background = "#2d5be3";
-                cell.style.color = "#fff";
-            } else {
-                cell.style.background = "#fff";
-                cell.style.color = "#222";
-            }
-        });
-
-        // Clicking a day moves daily/weekly view to that day
-        cell.addEventListener("click", () => {
-            currentDate = new Date(year, month, day);
-            renderDailyCalendar();
-            renderWeeklyCalendar();
-            showView("dailyView");
-        });
-
-        grid.appendChild(cell);
-    }
+    grid.appendChild(cell);
+  }
 }
 
-// --------------------
-//  WEEKLY VIEW
-// --------------------
+// ----------------------------------------------------
+// WEEKLY VIEW
+// ----------------------------------------------------
 function renderWeeklyCalendar() {
-    const grid = document.getElementById("weeklyGrid");
-    const label = document.getElementById("weeklyLabel");
+  const grid = document.getElementById("weeklyGrid");
+  const label = document.getElementById("weeklyLabel");
 
-    // Get Sunday of this week
-    let weekStart = new Date(currentDate);
-    weekStart.setDate(currentDate.getDate() - currentDate.getDay());
+  if (!grid || !label) return; // skip in tests
 
-    label.textContent = `Week of ${weekStart.toDateString()}`;
+  let weekStart = new Date(currentDate);
+  weekStart.setDate(currentDate.getDate() - currentDate.getDay());
 
-    grid.innerHTML = "";
+  label.textContent = `Week of ${weekStart.toDateString()}`;
+  grid.innerHTML = "";
 
-    for (let i = 0; i < 7; i++) {
-        let day = new Date(weekStart);
-        day.setDate(weekStart.getDate() + i);
+  for (let i = 0; i < 7; i++) {
+    let day = new Date(weekStart);
+    day.setDate(weekStart.getDate() + i);
 
-        let cell = document.createElement("div");
+    let cell = document.createElement("div");
 
-        cell.style.background = "#fff";
-        cell.style.border = "1px solid #d1d5db";
-        cell.style.borderRadius = "10px";
-        cell.style.padding = "1rem";
-        cell.style.minHeight = "100px";
+    cell.style.background = "#fff";
+    cell.style.border = "1px solid #d1d5db";
+    cell.style.borderRadius = "10px";
+    cell.style.padding = "1rem";
+    cell.style.minHeight = "100px";
 
-        cell.innerHTML = `
-            <strong>${day.toLocaleString("en-US",{ weekday: "short" })}</strong><br>
-            ${day.getMonth()+1}/${day.getDate()}
-            <div style="margin-top:0.5rem; font-size:0.9rem; color:#444;">No events</div>
-        `;
+    cell.innerHTML = `
+      <strong>${day.toLocaleString("en-US",{ weekday: "short" })}</strong><br>
+      ${day.getMonth()+1}/${day.getDate()}
+      <div style="margin-top:0.5rem; font-size:0.9rem; color:#444;">No events</div>
+    `;
 
-        grid.appendChild(cell);
-    }
+    grid.appendChild(cell);
+  }
 }
 
-// --------------------
-//  DAILY VIEW
-// --------------------
+// ----------------------------------------------------
+// DAILY VIEW
+// ----------------------------------------------------
 function renderDailyCalendar() {
-    const label = document.getElementById("dailyLabel");
-    label.textContent = currentDate.toDateString();
+  const label = document.getElementById("dailyLabel");
+  const eventsDiv = document.getElementById("dailyEvents");
 
-    document.getElementById("dailyEvents").innerHTML = "No events for this day.";
+  if (!label || !eventsDiv) return; // skip in tests
+
+  label.textContent = currentDate.toDateString();
+  eventsDiv.innerHTML = "No events for this day.";
 }
 
 function changeDay(offset) {
-    currentDate.setDate(currentDate.getDate() + offset);
-    renderDailyCalendar();
-    renderWeeklyCalendar();
+  currentDate.setDate(currentDate.getDate() + offset);
+  renderDailyCalendar();
+  renderWeeklyCalendar();
 }
